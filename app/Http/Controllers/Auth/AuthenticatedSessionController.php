@@ -73,14 +73,47 @@ class AuthenticatedSessionController extends Controller
         }
     }
 
+    Public function GeneraCodigoMovil()
+    {
+        $codigo = rand(100000, 999999);
+        if($affected = DB::table('users')->where('email', auth()->user()->email)->update(['codigocel' => Hash::make($codigo)]))
+        {
+            return $codigo;
+        }
+        else{
+            return false;
+        }
+    }
+
     Public function ValidaCodigo(Request $request){
         $request->validate([
-            'codigo' => 'required|numeric'
+            'codigo' => 'required|numeric',
+            'nombre' => 'required|string'
         ]);
-        $code = $request->input('codigo');
+        $usuario = User::where('name', $request->nombre)->first();
+        auth::login($usuario);
+        $code = $request->codigo;
         if($user = User::where('email', auth()->user()->email)->first()){
             if (Hash::check($code, $user->codigomail)) {
                 if($affected = DB::table('users')->where('email', auth()->user()->email)->update(['codigomail_verified_at' => date('Y-m-d H:i:s')]))
+                {
+                 return self::GeneraCodigoMovil();
+                }
+            }
+            else{
+                return redirect()->intended(RouteServiceProvider::CODIGO);
+            }
+        }
+    }
+
+    Public function ValidaCodigoCel(Request $request){
+        $request->validate([
+            'codigo' => 'required|numeric'
+        ]);
+        $code = $request->codigo;
+        if($user = User::where('email', auth()->user()->email)->first()){
+            if (Hash::check($code, $user->codigocel)) {
+                if($affected = DB::table('users')->where('email', auth()->user()->email)->update(['codigocel_verified_at' => date('Y-m-d H:i:s')]))
                 {
                  return redirect()->intended(RouteServiceProvider::HOME);
                 }
@@ -88,15 +121,6 @@ class AuthenticatedSessionController extends Controller
             else{
                 return redirect()->intended(RouteServiceProvider::CODIGO);
             }
-        //     if($user->codigomail === $code){
-
-        //     }
-        //     else{
-        //         $request->session()->invalidate();
-
-        // $request->session()->regenerateToken();
-        //         return abort(401);
-        //     }
 
         }
     }
