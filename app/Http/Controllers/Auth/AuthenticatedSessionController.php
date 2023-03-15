@@ -27,6 +27,7 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
         //return view('pantallas.espera');
     }
+    //HOLA
 
     /**
      * Handle an incoming authentication request.
