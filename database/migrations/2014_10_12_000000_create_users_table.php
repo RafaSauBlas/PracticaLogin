@@ -17,10 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('codigomail')->nullable();
-            $table->timestamp('codigomail_verified_at')->nullable();
-            $table->string('codigocel')->nullable();
-            $table->timestamp('codigocel_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

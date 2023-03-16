@@ -39,11 +39,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'codigomail' => NULL,
-            'codigomail_verified_at' => NULL,
-            'codigocel' => NULL,
-            'codigomail_verified_at' => NULL,
+            'password' => Hash::make($request->password)
         ]);
 
         event(new Registered($user));

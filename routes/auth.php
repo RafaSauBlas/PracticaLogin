@@ -35,10 +35,10 @@ Route::middleware('guest')->group(function () {
                 ->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
-
-    Route::post('logeocodigo', [AuthenticatedSessionController::class, 'ValidaCodigo'])->name('logeocodigo');
+Route::post('logeocodigo', [AuthenticatedSessionController::class, 'ValidaCodigo'])->name('logeocodigo');
     Route::post('logeocodigocel', [AuthenticatedSessionController::class, 'ValidaCodigoCel'])->name('logeocodigocel');
+
+Route::middleware('auth')->group(function () {
 
     Route::get('verify-email', EmailVerificationPromptController::class)
                 ->name('verification.notice');
