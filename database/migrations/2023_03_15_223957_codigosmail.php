@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamp('codigomail_created_at')->nullable();
             $table->timestamp('codigomail_verified_at')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->nullable();
+            // $table->foreign('user_id')->references('id')->on('users')->nullable();
         });
     }
 
