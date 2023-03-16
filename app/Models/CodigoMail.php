@@ -10,6 +10,8 @@ class CodigoMail extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $primaryKey = null;
+    public $incrementing = false;
     /**
      * The attributes that are mass assignable.
      *

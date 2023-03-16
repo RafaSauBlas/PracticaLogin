@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('codigocel')->nullable();
             $table->timestamp('codigocel_created_at')->nullable();
             $table->timestamp('codigocel_verified_at')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->integer('user_id')->nullable();
             // $table->foreign('user_id')->references('id')->on('users')->nullable();
         });
     }
