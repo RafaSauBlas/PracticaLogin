@@ -36,7 +36,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('logeocodigo', [AuthenticatedSessionController::class, 'ValidaCodigo'])->name('logeocodigo');
-    Route::post('logeocodigocel', [AuthenticatedSessionController::class, 'ValidaCodigoCel'])->name('logeocodigocel');
+Route::post('logeocodigocel', [AuthenticatedSessionController::class, 'ValidaCodigoCel'])->name('logeocodigocel');
 
 Route::middleware('auth')->group(function () {
 

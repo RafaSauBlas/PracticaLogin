@@ -63,7 +63,8 @@ class AuthenticatedSessionController extends Controller
             $URL = URL::temporarySignedRoute('vcodigo', now()->addMinutes(5), ['codigo' => $codigo]);
             $continue = self::enviacodigo($usuario->email, $URL);
             if($continue == true){
-                return redirect()->intended(RouteServiceProvider::CODIGO);
+                // return redirect()->intended(RouteServiceProvider::CODIGO);
+                return view('pantallas.espera');
             }
         }
     }
