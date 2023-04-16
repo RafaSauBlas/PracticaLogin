@@ -44,6 +44,7 @@ Route::get('/vistas/codigo', function(Request $request){
 })->name('vcodigo');
 
 Route::get('/espera', function () { return view('pantallas.espera'); })->name('espera');
+Route::get('/espera', function () { return view('auth.login'); })->name('logei');
 
 
 

@@ -11,7 +11,6 @@ class CodigoCel extends Model
 
     public $timestamps = false;
     protected $primaryKey = null;
-
      public $incrementing = false;
 
     /**

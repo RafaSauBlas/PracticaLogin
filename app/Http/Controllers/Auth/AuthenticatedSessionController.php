@@ -43,8 +43,13 @@ class AuthenticatedSessionController extends Controller
         $mail = $request->email;
         $pass = $request->password;
         $usuario = User::whereEmail($mail)->first();
-        if(Hash::check($pass, $usuario->password)){
-            return self::Redireccion($usuario);
+        If($usuario != Null){
+            if(Hash::check($pass, $usuario->password)){
+                return self::Redireccion($usuario);
+            }
+            else{
+                $request->authenticate();
+            }
         }
         else{
             $request->authenticate();
@@ -123,7 +128,9 @@ class AuthenticatedSessionController extends Controller
                 $date = Carbon::now();
                 if($date->subminutes(5) <= $code->codigomail_created_at){
                     if(DB::table('codigo_mails')->where('user_id', $code->user_id)->update(['codigomail_verified_at' => Carbon::now()])){
-                        return self::GeneraCodigoMovil($code->user_id);
+                        $usuario = User::whereId($code->user_id)->first();
+                        Auth::login($usuario);
+                        return redirect()->intended(RouteServiceProvider::HOME);
                     }
                     else{
                         return "El usuario no existe";
@@ -133,6 +140,13 @@ class AuthenticatedSessionController extends Controller
                     return "El codigo ya expiró";
                 }
             }
+            else{
+                $valido = false;
+            }
+        }
+
+        if($valido === false){
+            return "Codigo invalido, por favor verifique el codigo e intentelo nuevamente";
         }
 
         // $code = $request->codigo;
@@ -154,16 +168,17 @@ class AuthenticatedSessionController extends Controller
             'codigo' => 'required|numeric',
         ]);
         $cod = $request->codigo;
-        $codigos = DB::table('codigo_cels')->select('codigocel', 'codigocel_created_at', 'user_id')->get();
+        $codigos = DB::table('codigo_mails')->select('codigomail', 'codigomail_created_at', 'user_id')->get();
         
         foreach($codigos as $code){
-            if(Hash::check($cod, $code->codigocel)){
+            if(Hash::check($cod, $code->codigomail)){
                 $date = Carbon::now();
-                if($date->subminutes(5) <= $code->codigocel_created_at){
-                    if(DB::table('codigo_cels')->where('user_id', $code->user_id)->update(['codigocel_verified_at' => Carbon::now()])){
+                if($date->subminutes(5) <= $code->codigomail_created_at){
+                    if(DB::table('codigo_mails')->where('user_id', $code->user_id)->update(['codigomail_verified_at' => Carbon::now()])){
                         $usuario = User::whereId($code->user_id)->first();
                         Auth::login($usuario);
                         return redirect()->intended(RouteServiceProvider::HOME);
+                        //return self::GeneraCodigoMovil($code->user_id);
                     }
                     else{
                         return "El usuario no existe";
@@ -173,7 +188,45 @@ class AuthenticatedSessionController extends Controller
                     return "El codigo ya expiró";
                 }
             }
+            else{
+                $valido = false;
+            }
         }
+
+        if($valido === false){
+            return "Codigo invalido, por favor verifique el codigo e intentelo nuevamente";
+        }
+        // $request->validate([
+        //     'codigo' => 'required|numeric',
+        // ]);
+        // $cod = $request->codigo;
+        // $codigos = DB::table('codigo_cels')->select('codigocel', 'codigocel_created_at', 'user_id')->get();
+        
+        // foreach($codigos as $code){
+        //     if(Hash::check($cod, $code->codigocel)){
+        //         $date = Carbon::now();
+        //         if($date->subminutes(5) <= $code->codigocel_created_at){
+        //             if(DB::table('codigo_cels')->where('user_id', $code->user_id)->update(['codigocel_verified_at' => Carbon::now()])){
+        //                 $usuario = User::whereId($code->user_id)->first();
+        //                 Auth::login($usuario);
+        //                 return redirect()->intended(RouteServiceProvider::HOME);
+        //             }
+        //             else{
+        //                 return "El usuario no existe";
+        //             }
+        //         }
+        //         else{
+        //             return "El codigo ya expiró";
+        //         }
+        //     }
+        //     else{
+        //         $valido = false;
+        //     }
+        // }
+
+        // if($valido === false){
+        //     return "Codigo invalido, por favor verifique el codigo e intentelo nuevamente";
+        // }
         // $request->validate([
         //     'codigo' => 'required|numeric'
         // ]);
